@@ -22,19 +22,14 @@ overflow:hidden;
 }
 
 .container{
-display:grid;
-grid-template-columns:1fr 320px;
-gap:20px;
-width:90%;
-max-width:1000px;
-}
-
-.panel{
+text-align:center;
+padding:40px;
 background:rgba(255,255,255,0.06);
-backdrop-filter:blur(10px);
 border-radius:20px;
-padding:25px;
+backdrop-filter:blur(10px);
 box-shadow:0 0 25px rgba(0,255,255,.15);
+width:90%;
+max-width:700px;
 }
 
 h1{
@@ -52,7 +47,7 @@ margin-bottom:20px;
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:10px;
-margin-top:15px;
+margin-top:20px;
 }
 
 .box{
@@ -73,40 +68,6 @@ font-size:.8rem;
 text-transform:uppercase;
 margin-top:5px;
 }
-
-/* 🔒 ADMIN PANEL NASCOSTO */
-#adminPanel{
-position:fixed;
-top:20px;
-right:20px;
-width:260px;
-display:none;
-z-index:999;
-}
-
-input, textarea{
-width:100%;
-margin-bottom:10px;
-padding:10px;
-border-radius:10px;
-border:none;
-outline:none;
-font-family:'Rajdhani';
-}
-
-button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:10px;
-background:#00d2ff;
-font-weight:bold;
-cursor:pointer;
-}
-
-button:hover{
-background:#2d7cff;
-}
 </style>
 </head>
 
@@ -114,104 +75,54 @@ background:#2d7cff;
 
 <div class="container">
 
-<!-- DISPLAY -->
-<div class="panel">
+<h1>Missione Andromeda</h1>
 
-<h1 id="titleDisplay">IL GRANDE EVENTO COSMOS STA PER ARRIVARE!</h1>
-
-<div class="description" id="messageDisplay">
-Rimanate in attesa...
+<div class="description">
+Il segnale è stato rilevato oltre il bordo conosciuto.
 </div>
 
 <div class="countdown">
-<div class="box"><div class="number" id="days">00</div><div class="label">Giorni</div></div>
-<div class="box"><div class="number" id="hours">00</div><div class="label">Ore</div></div>
-<div class="box"><div class="number" id="minutes">00</div><div class="label">Minuti</div></div>
-<div class="box"><div class="number" id="seconds">00</div><div class="label">Secondi</div></div>
+
+<div class="box">
+<div class="number" id="days">00</div>
+<div class="label">Giorni</div>
 </div>
 
+<div class="box">
+<div class="number" id="hours">00</div>
+<div class="label">Ore</div>
 </div>
 
+<div class="box">
+<div class="number" id="minutes">00</div>
+<div class="label">Minuti</div>
 </div>
 
-<!-- 🔒 PANNELLO ADMIN NASCOSTO -->
-<div id="adminPanel" class="panel">
-
-<div id="loginBox">
-<h3>🔐 Admin Login</h3>
-<input id="passwordInput" placeholder="Password">
-<button onclick="checkPassword()">Accedi</button>
+<div class="box">
+<div class="number" id="seconds">00</div>
+<div class="label">Secondi</div>
 </div>
 
-<div id="editorBox" style="display:none;">
-<h3>⚙️ Modifica contenuti</h3>
-
-<input id="titleInput" placeholder="Titolo">
-<textarea id="messageInput" rows="5" placeholder="Messaggio"></textarea>
-
-<button onclick="saveData()">💾 Salva</button>
 </div>
 
 </div>
 
 <script>
 
-/* 🎯 COUNTDOWN FISSO */
+/* 🎯 DATA FISSA */
 const targetDate = new Date("2027-06-25T00:00:00");
 
-/* ELEMENTI */
-const titleDisplay = document.getElementById("titleDisplay");
-const messageDisplay = document.getElementById("messageDisplay");
-
-const titleInput = document.getElementById("titleInput");
-const messageInput = document.getElementById("messageInput");
-
-const adminPanel = document.getElementById("adminPanel");
-const loginBox = document.getElementById("loginBox");
-const editorBox = document.getElementById("editorBox");
-
-/* 🔑 PASSWORD */
-const ADMIN_PASSWORD = "2027";
-
-/* LOGIN */
-function checkPassword(){
-if(document.getElementById("passwordInput").value === ADMIN_PASSWORD){
-loginBox.style.display = "none";
-editorBox.style.display = "block";
-}else{
-alert("Password errata");
-}
-}
-
-/* 💾 SALVA */
-function saveData(){
-localStorage.setItem("title", titleInput.value);
-localStorage.setItem("message", messageInput.value);
-
-titleDisplay.textContent = titleInput.value;
-messageDisplay.textContent = messageInput.value;
-}
-
-/* 📥 CARICA DATI */
-function loadData(){
-const t = localStorage.getItem("title");
-const m = localStorage.getItem("message");
-
-if(t){
-titleDisplay.textContent = t;
-titleInput.value = t;
-}
-
-if(m){
-messageDisplay.textContent = m;
-messageInput.value = m;
-}
-}
-
-/* ⏳ COUNTDOWN */
 function tick(){
 const now = new Date().getTime();
 const distance = targetDate - now;
+
+if(distance <= 0){
+document.getElementById("days").textContent="00";
+document.getElementById("hours").textContent="00";
+document.getElementById("minutes").textContent="00";
+document.getElementById("seconds").textContent="00";
+return;
+}
 
 document.getElementById("days").textContent =
 String(Math.floor(distance/(1000*60*60*24))).padStart(2,"0");
@@ -226,14 +137,6 @@ document.getElementById("seconds").textContent =
 String(Math.floor((distance/1000)%60)).padStart(2,"0");
 }
 
-/* APRI PANNELLO SOLO CON COMBINAZIONE TASTI */
-document.addEventListener("keydown", function(e){
-if(e.ctrlKey && e.shiftKey && e.key === "A"){
-adminPanel.style.display = "block";
-}
-});
-
-loadData();
 setInterval(tick,1000);
 tick();
 
