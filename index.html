@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>Countdown Futuristico Spaziale</title>
+<title>Countdown Futuristico</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -12,7 +12,7 @@
 body{
 margin:0;
 font-family:'Rajdhani',sans-serif;
-background:#060816;
+background:radial-gradient(circle at top,#101c3d,#060816,#010103);
 color:white;
 display:flex;
 justify-content:center;
@@ -22,52 +22,78 @@ overflow:hidden;
 }
 
 .container{
-text-align:center;
-padding:40px;
-background:rgba(255,255,255,0.05);
-border-radius:20px;
-backdrop-filter:blur(10px);
-box-shadow:0 0 25px rgba(0,255,255,.2);
+display:grid;
+grid-template-columns:1fr 320px;
+gap:20px;
 width:90%;
-max-width:700px;
+max-width:1000px;
+}
+
+.panel{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+border-radius:20px;
+padding:30px;
+box-shadow:0 0 25px rgba(0,255,255,.2);
 }
 
 h1{
 font-family:'Orbitron',sans-serif;
-font-size:3rem;
 color:#8efaff;
-margin-bottom:20px;
 }
 
 .description{
-font-size:1.2rem;
-margin-bottom:30px;
 color:#c6e8ff;
+margin-bottom:20px;
 }
 
 .countdown{
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:15px;
+gap:10px;
+margin-top:20px;
 }
 
 .box{
 background:rgba(0,255,255,.08);
-padding:20px;
+padding:15px;
 border-radius:15px;
+text-align:center;
 }
 
 .number{
-font-size:2.2rem;
-font-family:'Orbitron',sans-serif;
+font-size:2rem;
+font-family:'Orbitron';
 color:#9afcff;
 }
 
 .label{
-margin-top:10px;
-font-size:.9rem;
-letter-spacing:2px;
+font-size:.8rem;
 text-transform:uppercase;
+}
+
+input, textarea{
+width:100%;
+margin-bottom:10px;
+padding:10px;
+border-radius:10px;
+border:none;
+outline:none;
+font-family:'Rajdhani';
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#00d2ff;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#2d7cff;
 }
 </style>
 </head>
@@ -76,65 +102,94 @@ text-transform:uppercase;
 
 <div class="container">
 
-<h1>Missione Andromeda</h1>
+<!-- 📊 DISPLAY -->
+<div class="panel">
 
-<div class="description">
-Il segnale è stato rilevato oltre il bordo conosciuto.
+<h1 id="titleDisplay">Missione Andromeda</h1>
+
+<div class="description" id="messageDisplay">
+Segnale in arrivo dallo spazio profondo...
 </div>
 
 <div class="countdown">
-
-<div class="box">
-<div class="number" id="days">00</div>
-<div class="label">Giorni</div>
-</div>
-
-<div class="box">
-<div class="number" id="hours">00</div>
-<div class="label">Ore</div>
-</div>
-
-<div class="box">
-<div class="number" id="minutes">00</div>
-<div class="label">Minuti</div>
-</div>
-
-<div class="box">
-<div class="number" id="seconds">00</div>
-<div class="label">Secondi</div>
+<div class="box"><div class="number" id="days">00</div><div class="label">Giorni</div></div>
+<div class="box"><div class="number" id="hours">00</div><div class="label">Ore</div></div>
+<div class="box"><div class="number" id="minutes">00</div><div class="label">Minuti</div></div>
+<div class="box"><div class="number" id="seconds">00</div><div class="label">Secondi</div></div>
 </div>
 
 </div>
+
+<!-- ⚙️ PANNELLO -->
+<div class="panel">
+
+<h3>⚙️ Pannello modifica</h3>
+
+<input id="titleInput" placeholder="Titolo..." />
+<textarea id="messageInput" rows="5" placeholder="Messaggio..."></textarea>
+
+<button onclick="saveData()">💾 Salva modifiche</button>
+
+</div>
+
 </div>
 
 <script>
 
-let targetDate = new Date();
-targetDate.setDate(targetDate.getDate()+10);
+/* 🎯 DATA FISSA */
+const targetDate = new Date("2027-06-25T00:00:00");
 
-function tick(){
+/* ELEMENTI */
+const titleDisplay = document.getElementById("titleDisplay");
+const messageDisplay = document.getElementById("messageDisplay");
 
-const now = new Date().getTime();
-const distance = targetDate.getTime()-now;
+const titleInput = document.getElementById("titleInput");
+const messageInput = document.getElementById("messageInput");
 
-const days = Math.floor(distance/(1000*60*60*24));
-const hours = Math.floor((distance/(1000*60*60))%24);
-const minutes = Math.floor((distance/(1000*60))%60);
-const seconds = Math.floor((distance/1000)%60);
+/* 🔄 CARICA DATI SALVATI */
+function loadData(){
+const savedTitle = localStorage.getItem("title");
+const savedMessage = localStorage.getItem("message");
 
-document.getElementById('days').textContent =
-String(days).padStart(2,'0');
-
-document.getElementById('hours').textContent =
-String(hours).padStart(2,'0');
-
-document.getElementById('minutes').textContent =
-String(minutes).padStart(2,'0');
-
-document.getElementById('seconds').textContent =
-String(seconds).padStart(2,'0');
+if(savedTitle){
+titleDisplay.textContent = savedTitle;
+titleInput.value = savedTitle;
 }
 
+if(savedMessage){
+messageDisplay.textContent = savedMessage;
+messageInput.value = savedMessage;
+}
+}
+
+/* 💾 SALVA DATI */
+function saveData(){
+localStorage.setItem("title", titleInput.value);
+localStorage.setItem("message", messageInput.value);
+
+titleDisplay.textContent = titleInput.value;
+messageDisplay.textContent = messageInput.value;
+}
+
+/* ⏳ COUNTDOWN */
+function tick(){
+const now = new Date().getTime();
+const distance = targetDate.getTime() - now;
+
+document.getElementById("days").textContent =
+String(Math.floor(distance/(1000*60*60*24))).padStart(2,"0");
+
+document.getElementById("hours").textContent =
+String(Math.floor((distance/(1000*60*60))%24)).padStart(2,"0");
+
+document.getElementById("minutes").textContent =
+String(Math.floor((distance/(1000*60))%60)).padStart(2,"0");
+
+document.getElementById("seconds").textContent =
+String(Math.floor((distance/1000)%60)).padStart(2,"0");
+}
+
+loadData();
 setInterval(tick,1000);
 tick();
 
