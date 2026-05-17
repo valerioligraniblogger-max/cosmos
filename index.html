@@ -2,9 +2,9 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Countdown Futuristico</title>
+<title>Countdown 2027</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -30,16 +30,17 @@ max-width:1000px;
 }
 
 .panel{
-background:rgba(255,255,255,0.05);
+background:rgba(255,255,255,0.06);
 backdrop-filter:blur(10px);
 border-radius:20px;
-padding:30px;
-box-shadow:0 0 25px rgba(0,255,255,.2);
+padding:25px;
+box-shadow:0 0 25px rgba(0,255,255,.15);
 }
 
 h1{
 font-family:'Orbitron',sans-serif;
 color:#8efaff;
+margin-bottom:10px;
 }
 
 .description{
@@ -51,7 +52,7 @@ margin-bottom:20px;
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:10px;
-margin-top:20px;
+margin-top:15px;
 }
 
 .box{
@@ -70,6 +71,7 @@ color:#9afcff;
 .label{
 font-size:.8rem;
 text-transform:uppercase;
+margin-top:5px;
 }
 
 input, textarea{
@@ -102,7 +104,7 @@ background:#2d7cff;
 
 <div class="container">
 
-<!-- 📊 DISPLAY -->
+<!-- DISPLAY -->
 <div class="panel">
 
 <h1 id="titleDisplay">Missione Andromeda</h1>
@@ -120,7 +122,7 @@ Segnale in arrivo dallo spazio profondo...
 
 </div>
 
-<!-- ⚙️ PANNELLO -->
+<!-- PANNELLO -->
 <div class="panel">
 
 <h3>⚙️ Pannello modifica</h3>
@@ -146,7 +148,7 @@ const messageDisplay = document.getElementById("messageDisplay");
 const titleInput = document.getElementById("titleInput");
 const messageInput = document.getElementById("messageInput");
 
-/* 🔄 CARICA DATI SALVATI */
+/* CARICA DATI SALVATI */
 function loadData(){
 const savedTitle = localStorage.getItem("title");
 const savedMessage = localStorage.getItem("message");
@@ -162,7 +164,7 @@ messageInput.value = savedMessage;
 }
 }
 
-/* 💾 SALVA DATI */
+/* SALVA DATI */
 function saveData(){
 localStorage.setItem("title", titleInput.value);
 localStorage.setItem("message", messageInput.value);
@@ -171,10 +173,18 @@ titleDisplay.textContent = titleInput.value;
 messageDisplay.textContent = messageInput.value;
 }
 
-/* ⏳ COUNTDOWN */
+/* COUNTDOWN */
 function tick(){
 const now = new Date().getTime();
 const distance = targetDate.getTime() - now;
+
+if(distance <= 0){
+document.getElementById("days").textContent="00";
+document.getElementById("hours").textContent="00";
+document.getElementById("minutes").textContent="00";
+document.getElementById("seconds").textContent="00";
+return;
+}
 
 document.getElementById("days").textContent =
 String(Math.floor(distance/(1000*60*60*24))).padStart(2,"0");
