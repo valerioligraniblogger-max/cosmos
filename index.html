@@ -74,6 +74,16 @@ text-transform:uppercase;
 margin-top:5px;
 }
 
+/* 🔒 ADMIN PANEL NASCOSTO */
+#adminPanel{
+position:fixed;
+top:20px;
+right:20px;
+width:260px;
+display:none;
+z-index:999;
+}
+
 input, textarea{
 width:100%;
 margin-bottom:10px;
@@ -122,23 +132,31 @@ Segnale in arrivo dallo spazio profondo...
 
 </div>
 
-<!-- PANNELLO -->
-<div class="panel">
+</div>
 
-<h3>⚙️ Pannello modifica</h3>
+<!-- 🔒 PANNELLO ADMIN NASCOSTO -->
+<div id="adminPanel" class="panel">
 
-<input id="titleInput" placeholder="Titolo..." />
-<textarea id="messageInput" rows="5" placeholder="Messaggio..."></textarea>
+<div id="loginBox">
+<h3>🔐 Admin Login</h3>
+<input id="passwordInput" placeholder="Password">
+<button onclick="checkPassword()">Accedi</button>
+</div>
 
-<button onclick="saveData()">💾 Salva modifiche</button>
+<div id="editorBox" style="display:none;">
+<h3>⚙️ Modifica contenuti</h3>
 
+<input id="titleInput" placeholder="Titolo">
+<textarea id="messageInput" rows="5" placeholder="Messaggio"></textarea>
+
+<button onclick="saveData()">💾 Salva</button>
 </div>
 
 </div>
 
 <script>
 
-/* 🎯 DATA FISSA */
+/* 🎯 COUNTDOWN FISSO */
 const targetDate = new Date("2027-06-25T00:00:00");
 
 /* ELEMENTI */
@@ -148,23 +166,24 @@ const messageDisplay = document.getElementById("messageDisplay");
 const titleInput = document.getElementById("titleInput");
 const messageInput = document.getElementById("messageInput");
 
-/* CARICA DATI SALVATI */
-function loadData(){
-const savedTitle = localStorage.getItem("title");
-const savedMessage = localStorage.getItem("message");
+const adminPanel = document.getElementById("adminPanel");
+const loginBox = document.getElementById("loginBox");
+const editorBox = document.getElementById("editorBox");
 
-if(savedTitle){
-titleDisplay.textContent = savedTitle;
-titleInput.value = savedTitle;
+/* 🔑 PASSWORD */
+const ADMIN_PASSWORD = "2027";
+
+/* LOGIN */
+function checkPassword(){
+if(document.getElementById("passwordInput").value === ADMIN_PASSWORD){
+loginBox.style.display = "none";
+editorBox.style.display = "block";
+}else{
+alert("Password errata");
+}
 }
 
-if(savedMessage){
-messageDisplay.textContent = savedMessage;
-messageInput.value = savedMessage;
-}
-}
-
-/* SALVA DATI */
+/* 💾 SALVA */
 function saveData(){
 localStorage.setItem("title", titleInput.value);
 localStorage.setItem("message", messageInput.value);
@@ -173,18 +192,26 @@ titleDisplay.textContent = titleInput.value;
 messageDisplay.textContent = messageInput.value;
 }
 
-/* COUNTDOWN */
+/* 📥 CARICA DATI */
+function loadData(){
+const t = localStorage.getItem("title");
+const m = localStorage.getItem("message");
+
+if(t){
+titleDisplay.textContent = t;
+titleInput.value = t;
+}
+
+if(m){
+messageDisplay.textContent = m;
+messageInput.value = m;
+}
+}
+
+/* ⏳ COUNTDOWN */
 function tick(){
 const now = new Date().getTime();
-const distance = targetDate.getTime() - now;
-
-if(distance <= 0){
-document.getElementById("days").textContent="00";
-document.getElementById("hours").textContent="00";
-document.getElementById("minutes").textContent="00";
-document.getElementById("seconds").textContent="00";
-return;
-}
+const distance = targetDate - now;
 
 document.getElementById("days").textContent =
 String(Math.floor(distance/(1000*60*60*24))).padStart(2,"0");
@@ -198,6 +225,13 @@ String(Math.floor((distance/(1000*60))%60)).padStart(2,"0");
 document.getElementById("seconds").textContent =
 String(Math.floor((distance/1000)%60)).padStart(2,"0");
 }
+
+/* APRI PANNELLO SOLO CON COMBINAZIONE TASTI */
+document.addEventListener("keydown", function(e){
+if(e.ctrlKey && e.shiftKey && e.key === "A"){
+adminPanel.style.display = "block";
+}
+});
 
 loadData();
 setInterval(tick,1000);
