@@ -58,6 +58,15 @@ body{
   100%{ transform: scale(1); }
 }
 
+/* OVERLAY */
+.overlay-image{
+ position:absolute;
+ inset:0;
+ background:url("overlay.png") center center / contain no-repeat;
+ pointer-events:none;
+ z-index:0;
+}
+
 /* 🌫 ATMOSFERA */
 .atmosphere{
   position:absolute;
@@ -85,6 +94,8 @@ body{
 
 /* 📦 CONTAINER */
 .container{
+  position:relative;
+  z-index:10;
   width:100%;
   max-width:1000px;
   padding: clamp(10px, 4vw, 10px);
@@ -98,7 +109,7 @@ body{
 
 /* 🪐 LOGO */
 .logo{
-  margin-top: -24px
+  margin-top: -24px;
   margin-bottom:20px;
   display:flex;
   justify-content:center;
@@ -191,7 +202,9 @@ body{
 /* 📱 MOBILE */
 @media(max-width:480px){
   .countdown{ grid-template-columns:1fr; }
-  .container{ padding:14px; }
+  .container{
+  position:relative;
+  z-index:10; padding:14px; }
 }
 </style>
 </head>
@@ -201,6 +214,7 @@ body{
 <div class="earth"></div>
 <div class="atmosphere"></div>
 <div class="nebula"></div>
+<div class="overlay-image"></div>
 
 <div class="container">
 
@@ -284,3 +298,4 @@ setInterval(updateCountdown,1000);
 
 </body>
 </html>
+
