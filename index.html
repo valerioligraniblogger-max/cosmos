@@ -3,183 +3,283 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#020111">
+<title>Countdown COSMOS</title>
 
-<title>Countdown 2027</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
+*{
+  margin:0px;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Orbitron', sans-serif;
+}
+
+html, body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
 body{
-margin:0;
-font-family:'Rajdhani',sans-serif;
-background: radial-gradient(circle at top,#0b1b3a,#05060f 60%,#000);
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-overflow:hidden;
+  min-height:100vh;
+  min-height:100dvh;
+  background:#000;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+  padding:16px;
 }
 
-/* sfondo glow animato */
-body::before{
-content:"";
-position:absolute;
-width:600px;
-height:600px;
-background:radial-gradient(circle,rgba(0,255,255,.15),transparent 70%);
-filter:blur(60px);
-top:-100px;
-left:-100px;
-animation:float 8s ease-in-out infinite;
+/* 🌍 SFONDO TERRA */
+.earth{
+  position:absolute;
+  inset:0;
+  background:
+    url("earth-4k.jpg")
+    center bottom / 100%
+    no-repeat;
+
+  z-index:-3;
+
+  animation: earthPulse 42s cubic-bezier(0.42,0,0.58,1) infinite;
+
+  filter: contrast(1.15) saturate(1.2) brightness(0.92);
+  transform-origin:center center;
+  will-change: transform, filter;
 }
 
-@keyframes float{
-0%,100%{transform:translate(0,0);}
-50%{transform:translate(80px,60px);}
+@keyframes earthPulse {
+  0%{ transform: scale(1); }
+  50%{ transform: scale(1.30); }
+  100%{ transform: scale(1); }
 }
 
+/* 🌫 ATMOSFERA */
+.atmosphere{
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at bottom, rgba(0,180,255,0.28), transparent 60%);
+  z-index:-2;
+}
+
+/* ☄️ NEBULA */
+.nebula{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(0,255,255,0.10), transparent 40%),
+    radial-gradient(circle at 70% 60%, rgba(255,0,255,0.08), transparent 45%);
+  filter: blur(30px);
+  z-index:-1;
+  animation: pulseNebula 24s ease-in-out infinite alternate;
+}
+
+@keyframes pulseNebula{
+  from{ transform:scale(1); }
+  to{ transform:scale(1.08); }
+}
+
+/* 📦 CONTAINER */
 .container{
-position:relative;
-text-align:center;
-padding:50px 40px;
-background:rgba(255,255,255,0.05);
-border-radius:25px;
-backdrop-filter:blur(18px);
-box-shadow:0 0 40px rgba(0,255,255,.12);
-width:90%;
-max-width:720px;
-border:1px solid rgba(0,255,255,.15);
+  width:100%;
+  max-width:1000px;
+  padding: clamp(10px, 4vw, 10px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:285px;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 40px rgba(0,140,255,0.25);
+  text-align:center;
 }
 
-h1{
-font-family:'Orbitron',sans-serif;
-color:#7ffcff;
-margin-bottom:10px;
-letter-spacing:2px;
-text-shadow:0 0 15px rgba(0,255,255,.35);
-animation:pulse 3s infinite;
+/* 🪐 LOGO */
+.logo{
+  margin-top: -24px
+  margin-bottom:20px;
+  display:flex;
+  justify-content:center;
 }
 
-@keyframes pulse{
-0%,100%{transform:scale(1);}
-50%{transform:scale(1.02);}
+.logo img{
+  width: clamp(80px, 18vw, 160px);
+  height: auto;
+  filter:
+    drop-shadow(0 0 8px #00eaff);
 }
 
-.description{
-color:#b9e9ff;
-margin-bottom:25px;
-opacity:.9;
+@keyframes logoFloat{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-6px); }
 }
 
+/* 🪐 TITOLO */
+.title{
+  font-size: clamp(1.2rem, 4.5vw, 2.6rem);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#7df9ff;
+  text-shadow:0 0 12px #00eaff;
+  animation: pulseTitle 4s ease-in-out infinite;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  line-height:1.2;
+}
+
+.title .cosmos{
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  letter-spacing:4px;
+}
+
+@keyframes pulseTitle{
+  0%,100%{ transform:scale(1); }
+  50%{ transform:scale(1.03); }
+}
+
+.subtitle{
+  margin-top:10px;
+  margin-bottom:25px;
+  font-size: clamp(0.85rem, 3.5vw, 1rem);
+  letter-spacing:1px;
+  color:#b6cfff;
+  opacity:0.85;
+}
+
+/* ⏳ COUNTDOWN */
 .countdown{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:15px;
-margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:14px;
 }
 
-.box{
-background:rgba(0,255,255,.06);
-padding:18px;
-border-radius:18px;
-text-align:center;
-border:1px solid rgba(0,255,255,.1);
-transition:0.3s ease;
-box-shadow:0 0 10px rgba(0,255,255,.05);
+.time-box{
+  background: rgba(10,20,40,0.7);
+  border:1px solid rgba(125,249,255,0.2);
+  border-radius:99px;
+  padding:14px 8px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
-.box:hover{
-transform:translateY(-5px);
-box-shadow:0 0 25px rgba(0,255,255,.25);
-border-color:rgba(0,255,255,.3);
+.time-box:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 20px rgba(0,225,255,0.25);
 }
 
 .number{
-font-size:2.4rem;
-font-family:'Orbitron';
-color:#9ffcff;
-text-shadow:0 0 12px rgba(0,255,255,.4);
+  font-size: clamp(1.6rem, 7vw, 4rem);
+  font-weight:800;
+  text-shadow:0 0 10px #00d9ff;
 }
 
 .label{
-font-size:.85rem;
-text-transform:uppercase;
-margin-top:5px;
-letter-spacing:1px;
-color:#cdefff;
+  margin-top:6px;
+  font-size:0.75rem;
+  letter-spacing:2px;
+  color:#7df9ff;
+  text-transform:uppercase;
+}
+
+/* 📱 TABLET */
+@media(max-width:768px){
+  .countdown{ grid-template-columns:repeat(2,1fr); }
+}
+
+/* 📱 MOBILE */
+@media(max-width:480px){
+  .countdown{ grid-template-columns:1fr; }
+  .container{ padding:14px; }
 }
 </style>
 </head>
 
 <body>
 
+<div class="earth"></div>
+<div class="atmosphere"></div>
+<div class="nebula"></div>
+
 <div class="container">
 
-<h1>IL GRANDE EVENTO COSMOS STA ARRIVANDO!</h1>
+  <div class="logo">
+    <img src="logo.png" alt="Logo COSMOS">
+  </div>
 
-<div class="description">
-Il futuro è in attesa...
-</div>
+  <div class="title">
+    <div>Il grande evento</div>
+    <div class="cosmos">COSMOS</div>
+    <div>sta per arrivare!</div>
+  </div>
 
-<div class="countdown">
+  <div class="subtitle">
+    Il futuro è in attesa...
+  </div>
 
-<div class="box">
-<div class="number" id="days">00</div>
-<div class="label">Giorni</div>
-</div>
+  <div class="countdown">
 
-<div class="box">
-<div class="number" id="hours">00</div>
-<div class="label">Ore</div>
-</div>
+    <div class="time-box">
+      <div class="number" id="days">00</div>
+      <div class="label">Giorni</div>
+    </div>
 
-<div class="box">
-<div class="number" id="minutes">00</div>
-<div class="label">Minuti</div>
-</div>
+    <div class="time-box">
+      <div class="number" id="hours">00</div>
+      <div class="label">Ore</div>
+    </div>
 
-<div class="box">
-<div class="number" id="seconds">00</div>
-<div class="label">Secondi</div>
-</div>
+    <div class="time-box">
+      <div class="number" id="minutes">00</div>
+      <div class="label">Minuti</div>
+    </div>
 
-</div>
+    <div class="time-box">
+      <div class="number" id="seconds">00</div>
+      <div class="label">Secondi</div>
+    </div>
+
+  </div>
 
 </div>
 
 <script>
+const targetDate =
+  new Date("June 25, 2027 00:00:00").getTime();
 
-const targetDate = new Date("2027-06-25T00:00:00");
+function updateCountdown(){
 
-function tick(){
-const now = new Date().getTime();
-const distance = targetDate - now;
+  const now = new Date().getTime();
+  const distance = targetDate - now;
 
-if(distance <= 0){
-document.getElementById("days").textContent="00";
-document.getElementById("hours").textContent="00";
-document.getElementById("minutes").textContent="00";
-document.getElementById("seconds").textContent="00";
-return;
+  if(distance < 0){
+    document.querySelector('.countdown').innerHTML =
+      `<div style="
+        grid-column:1/-1;
+        font-size:2rem;
+        color:#7df9ff;
+      ">
+        Missione Avviata 🚀
+      </div>`;
+    return;
+  }
+
+  document.getElementById('days').textContent =
+    Math.floor(distance / (1000*60*60*24));
+
+  document.getElementById('hours').textContent =
+    Math.floor((distance%(1000*60*60*24))/(1000*60*60)).toString().padStart(2,'0');
+
+  document.getElementById('minutes').textContent =
+    Math.floor((distance%(1000*60*60))/(1000*60)).toString().padStart(2,'0');
+
+  document.getElementById('seconds').textContent =
+    Math.floor((distance%(1000*60))/1000).toString().padStart(2,'0');
 }
 
-document.getElementById("days").textContent =
-String(Math.floor(distance/(1000*60*60*24))).padStart(2,"0");
-
-document.getElementById("hours").textContent =
-String(Math.floor((distance/(1000*60*60))%24)).padStart(2,"0");
-
-document.getElementById("minutes").textContent =
-String(Math.floor((distance/(1000*60))%60)).padStart(2,"0");
-
-document.getElementById("seconds").textContent =
-String(Math.floor((distance/1000)%60)).padStart(2,"0");
-}
-
-setInterval(tick,1000);
-tick();
-
+updateCountdown();
+setInterval(updateCountdown,1000);
 </script>
 
 </body>
